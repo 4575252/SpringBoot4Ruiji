@@ -12,6 +12,8 @@ import com.iyyxx.springboot4ruiji.service.*;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,6 +36,7 @@ public class SetmealController {
     private CategoryService categoryService;
 
     @PostMapping
+    @CacheEvict(value = "setmeal", allEntries = true)
     public R<String> save(@RequestBody SetmealDto setmealDto) {
         log.info("套餐信息：{}", setmealDto);
         setmealService.saveWithDish(setmealDto);
@@ -87,6 +90,7 @@ public class SetmealController {
      * @return
      */
     @DeleteMapping
+    @CacheEvict(value = "setmeal", allEntries = true)
     public R<String> delete(@RequestParam List<Long> ids) {
         log.info("ids:{}", ids);
         setmealService.removeWithDish(ids);
@@ -95,6 +99,7 @@ public class SetmealController {
 
 
     @GetMapping("/list")
+    @Cacheable(value = "setmeal", key = "#setmeal.categoryId+'_'+#setmeal.status")
     public R<List<Setmeal>> list(Setmeal setmeal) {
         log.info("setmeal:{}", setmeal);
         //条件构造器
@@ -106,31 +111,5 @@ public class SetmealController {
 
         return R.success(setmealService.list(queryWrapper));
     }
-
-
-    /**
-     * 根据id查询菜品信息和对应的口味信息
-     *
-     * @param id
-     * @return
-     */
-//    @GetMapping("/{id}")
-//    public R<DishDto> get(@PathVariable Long id) {
-//        DishDto dishDto = setmealService.getByIdWithFlavor(id);
-//        return R.success(dishDto);
-//    }
-
-    /**
-     * 修改菜品
-     *
-     * @param dishDto
-     * @return
-     */
-//    @PutMapping
-//    public R<String> update(@RequestBody DishDto dishDto) {
-//        log.info(dishDto.toString());
-//        dishService.updateWithFlavor(dishDto);
-//        return R.success("修改菜品成功");
-//    }
 }
 

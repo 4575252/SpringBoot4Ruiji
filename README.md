@@ -419,7 +419,34 @@ public class EmployeeController {
 
 
 ### 章节8
+本章主要工作有：
+* 环境搭建
+* 缓存短信验证码
+* 缓存菜品信息
+* SpringCache
+* 缓存套餐数据
 
+技术方面主要有：
+* 引入springDataRedis组件，含maven的popm坐标、redsconfig配置类、yml配置信息
+* 修改usercontroller，对发送短信、登录验证做redis的存取、删除操作。
+* 修改dishcontroller，对list查询做缓存判断和加载，对save、update做更新清理逻辑
+* 应用SpringCache框架，简化redisTemplate
+  * 支持redis、ehCache、guavaCache
+  * pom增加spring-boot-starter-cache 坐标
+  * yml增加cache配置，如缓存时间
+  * @EnableCaching，SpringBoot入口开启，开启缓存注解功能
+  * @Cacheable， 在Controller的方法上加入，进行缓存操作
+  * @CachePut
+  * @CacheEvict, 作用在controller类的save、update方法上，做缓存清空
+  * 返回的R对象要实现序列化接口
+
+
+测试
+* 测试前端的菜品栏目两次读取有缓存的效果，采用redisTemplate Bean。
+* 测试套餐数据的缓存效果，采用SpringCache注解
+
+收获：
+* redis的key中如果有两个冒号，则将冒号前的字符作为分组名称，从another redis desktop manager中观察所得
 
 
 ### 章节9
