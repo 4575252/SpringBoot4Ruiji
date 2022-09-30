@@ -94,6 +94,20 @@ public class SetmealController {
     }
 
 
+    @GetMapping("/list")
+    public R<List<Setmeal>> list(Setmeal setmeal) {
+        log.info("setmeal:{}", setmeal);
+        //条件构造器
+        LambdaQueryWrapper<Setmeal> queryWrapper = new LambdaQueryWrapper<>();
+
+        queryWrapper.eq(null != setmeal.getCategoryId(), Setmeal::getCategoryId, setmeal.getCategoryId());
+        queryWrapper.eq(null != setmeal.getStatus(), Setmeal::getStatus, setmeal.getStatus());
+        queryWrapper.orderByDesc(Setmeal::getUpdateTime);
+
+        return R.success(setmealService.list(queryWrapper));
+    }
+
+
     /**
      * 根据id查询菜品信息和对应的口味信息
      *

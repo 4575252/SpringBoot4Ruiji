@@ -41,58 +41,58 @@
 * 通过idea创建springboot工程，复制前端资源到resources中
 * 修改pom，导入坐标
 ```xml
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter</artifactId>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-test</artifactId>
-    <scope>test</scope>
-</dependency>
-
-<dependency>
-    <groupId>org.springframework.boot</groupId>
-    <artifactId>spring-boot-starter-web</artifactId>
-    <scope>compile</scope>
-</dependency>
-
-<dependency>
-    <groupId>com.baomidou</groupId>
-    <artifactId>mybatis-plus-boot-starter</artifactId>
-    <version>3.4.2</version>
-</dependency>
-
-<dependency>
-    <groupId>org.projectlombok</groupId>
-    <artifactId>lombok</artifactId>
-    <version>1.18.20</version>
-</dependency>
-
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>fastjson</artifactId>
-    <version>1.2.76</version>
-</dependency>
-
-<dependency>
-    <groupId>commons-lang</groupId>
-    <artifactId>commons-lang</artifactId>
-    <version>2.6</version>
-</dependency>
-
-<dependency>
-    <groupId>mysql</groupId>
-    <artifactId>mysql-connector-java</artifactId>
-    <scope>runtime</scope>
-</dependency>
-
-<dependency>
-    <groupId>com.alibaba</groupId>
-    <artifactId>druid-spring-boot-starter</artifactId>
-    <version>1.1.23</version>
-</dependency>
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+  </dependency>
+  
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+  </dependency>
+  
+  <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
+      <scope>compile</scope>
+  </dependency>
+  
+  <dependency>
+      <groupId>com.baomidou</groupId>
+      <artifactId>mybatis-plus-boot-starter</artifactId>
+      <version>3.4.2</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>1.18.20</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>fastjson</artifactId>
+      <version>1.2.76</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>commons-lang</groupId>
+      <artifactId>commons-lang</artifactId>
+      <version>2.6</version>
+  </dependency>
+  
+  <dependency>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <scope>runtime</scope>
+  </dependency>
+  
+  <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+      <version>1.1.23</version>
+  </dependency>
 ```
 
 * 导入配置文件application.yml
@@ -400,20 +400,30 @@ public class EmployeeController {
 
 ### 章节7
 
-#### 2.1、
+本章主要工作有：
+* 前端：用户地址簿管理、菜品展示、购物车、下单
+* 缺失：前端访问用户页有404错误，购物车不能做减法只能清空
+* 修改：因前端展示需要，修改后端dishcontroller、setmealcontroller、
+
+技术方面主要有：
+* 短信发送工具类，仅供参考，需要阿里云sdk的maven坐标导入！
+* 验证码处理工具类，仅供参考，实际没有使用
+* mybatisplus的IdWorker生成订单id，然后同时填充主表、明细表!
+
+测试
+* 采用手机号登录，首次登录数据表自动新增用户，再次登录不新增
+* 未登录直接访问前端index界面会被踢到登录页
+* 菜品添加到购物，购物车提交下单，如遇地址簿为空则需要新建地址簿并设为默认
+* 地址簿可以提前设置，在前端左上角！
+
+
 
 ### 章节8
 
-#### 2.1、
+
 
 ### 章节9
 
-#### 2.1、
 
 ### 章节10
 
-#### 2.1、
-
-### 章节11
-
-#### 2.1、

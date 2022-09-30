@@ -6,6 +6,7 @@ import com.iyyxx.springboot4ruiji.common.R;
 import com.iyyxx.springboot4ruiji.dto.DishDto;
 import com.iyyxx.springboot4ruiji.entity.Category;
 import com.iyyxx.springboot4ruiji.entity.Dish;
+import com.iyyxx.springboot4ruiji.entity.DishFlavor;
 import com.iyyxx.springboot4ruiji.service.CategoryService;
 import com.iyyxx.springboot4ruiji.service.DishFlavorService;
 import com.iyyxx.springboot4ruiji.service.DishService;
@@ -118,7 +119,7 @@ public class DishController {
      * @return
      */
     @GetMapping("/list")
-    public R<List<Dish>> list(Dish dish) {
+    public R<List<DishDto>> list(Dish dish) {
         //构造查询条件
         LambdaQueryWrapper<Dish> queryWrapper = new LambdaQueryWrapper<>();
         queryWrapper.eq(dish.getCategoryId() != null, Dish::getCategoryId, dish.getCategoryId());
@@ -126,8 +127,21 @@ public class DishController {
         queryWrapper.eq(Dish::getStatus, 1);
         //添加排序条件
         queryWrapper.orderByAsc(Dish::getSort).orderByDesc(Dish::getUpdateTime);
-        List<Dish> list = dishService.list(queryWrapper);
-        return R.success(list);
+        List<Dish> dishs = dishService.list(queryWrapper);
+        List<DishDto> dishDtos = dishs.stream().map(item -> {
+            DishDto dishDto = new DishDto();
+            BeanUtils.copyProperties(item, dishDto);
+            Category category = categoryService.getById(item.getCategoryId());
+            if (category != null) {
+                dishDto.setCategoryName(category.getName());
+            }
+            LambdaQueryWrapper<DishFlavor> wrapper = new LambdaQueryWrapper<>();
+            wrapper.eq(DishFlavor::getDishId, item.getId());
+            dishDto.setFlavors(dishFlavorService.list(wrapper));
+            return dishDto;
+        }).collect(Collectors.toList());
+        return R.success(dishDtos);
+
     }
 }
 
