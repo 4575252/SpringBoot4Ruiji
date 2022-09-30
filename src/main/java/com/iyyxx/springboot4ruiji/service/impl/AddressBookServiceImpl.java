@@ -2,11 +2,8 @@ package com.iyyxx.springboot4ruiji.service.impl;
 
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.iyyxx.springboot4ruiji.entity.AddressBook;
-import com.iyyxx.springboot4ruiji.entity.User;
 import com.iyyxx.springboot4ruiji.mapper.AddressBookMapper;
-import com.iyyxx.springboot4ruiji.mapper.UserMapper;
 import com.iyyxx.springboot4ruiji.service.AddressBookService;
-import com.iyyxx.springboot4ruiji.service.UserService;
 import org.springframework.stereotype.Service;
 
 /**

@@ -9,6 +9,7 @@
   * 功能设计：xmind
   * 数据模型：powerdesigner（猜测，也可能直接在mysql上开发）
   * 前端开发：vsc+node.js+vue+elementui(大概率)
+  * 后端开发：idea、postman
   * 接口开发：yapi前后交互、swagger后端文档
   * 部署调试：finalshell、junit
 * 技术组件：
@@ -450,6 +451,24 @@ public class EmployeeController {
 
 
 ### 章节9
+
+本章主要工作有：
+* MySQL主从复制（环境搭建其他文章已整理，这里不赘述）
+* 项目实现读写分离(重点)
+* Nginx安装、反向代理和负载均衡配置，其他文章已整理，这里不赘述
+
+技术方面主要有：
+* 引入Sharding-JDBC组件，
+  * 支持常见的基于jdbc的orm框架，如jpa、hibernate、mybatis、Spring jdbc Template
+  * 支持第三方连接池，如dbcp，c3p0，druid等等
+  * 支持遵循sql92的数据库，如mysql、oracle、sqlserver、pgsql
+  * 配置：
+    * 引入pom坐标
+    * 修改yml配置，运行bean定义覆盖
+
+
+测试
+* 测试登录、用户启用或禁用，在控制台日志中的变化，有打印数据源名称
 
 
 ### 章节10
