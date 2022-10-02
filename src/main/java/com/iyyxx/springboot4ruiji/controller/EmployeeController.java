@@ -5,6 +5,10 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.iyyxx.springboot4ruiji.common.R;
 import com.iyyxx.springboot4ruiji.entity.Employee;
 import com.iyyxx.springboot4ruiji.service.EmployeeService;
+import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
+import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +27,7 @@ import java.time.LocalDateTime;
 @Slf4j
 @RestController
 @RequestMapping("/employee")
+@Api(tags = "员工管理")
 public class EmployeeController {
     @Autowired
     private EmployeeService employeeService;
@@ -34,6 +39,7 @@ public class EmployeeController {
      * @return
      * */
     @PostMapping("/login")
+    @ApiOperation("登录接口")
     public R<Employee> login(HttpServletRequest request, @RequestBody Employee employee) {
         //1、将页面提交的密码password进行md5加密处理
         String password = employee.getPassword();
@@ -97,10 +103,16 @@ public class EmployeeController {
      * @return
      */
     @GetMapping("/page")
+    @ApiOperation("登录接口")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "page", value = "页码", required = true),
+            @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+            @ApiImplicitParam(name = "name", value = "用户名", required = false)}
+    )
     public R<Page> page(int page, int pageSize, String name) {
         log.info("page = {},pageSize = {},name = {}", page, pageSize, name);
         //构造分页构造器
-        Page pageInfo = new Page(page,pageSize);
+        Page pageInfo = new Page(page, pageSize);
         // 构造条件构造器
         LambdaQueryWrapper<Employee> queryWrapper = new LambdaQueryWrapper();
         //添加过滤条件

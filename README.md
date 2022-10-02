@@ -8,7 +8,7 @@
   * 原型设计：axure
   * 功能设计：xmind
   * 数据模型：powerdesigner（猜测，也可能直接在mysql上开发）
-  * 前端开发：vsc+node.js+vue+elementui(大概率)
+  * 前端开发：vsc+node.js+vue+elementui(大概率),mock,webpack
   * 后端开发：idea、postman
   * 接口开发：yapi前后交互、swagger后端文档
   * 部署调试：finalshell、junit
@@ -472,4 +472,116 @@ public class EmployeeController {
 
 
 ### 章节10
+本章主要工作有：
+* 应用yapi解决前后端分离开发
+  * 接口定义yapi，前端vsc调试yapi的mock数据，后端用swagger进行调试，再联调集成，发布测试
+* swagger框架集成与应用
 
+技术方面主要有：
+* swagger技术(实际采用knife4j框架)
+  * pom坐标
+  * webmvcconfig配置器中开启swagger2、knife4j2的标签，并配置DocketBean和站点项目信息
+  * 注解的使用
+    * 实体类，用@ApiModel("员工"),@ApiModelProperty("员工姓名"),标注实体类和属性上，doc就会提现中文字段
+    * 控制器，用@Api(tags = "员工管理")，@ApiOperation("登录接口")，
+      @ApiImplicitParams({
+      @ApiImplicitParam(name = "page", value = "页码", required = true),
+      @ApiImplicitParam(name = "pageSize", value = "每页记录数", required = true),
+      @ApiImplicitParam(name = "name", value = "用户名", required = false)}
+      )，分别作用与类、方法及参数
+* 安装yapi
+  * 环境要求，nodejs（7.6+)、mongodb（2.6+）、git
+
+测试
+* 安装swagger2，测试doc文档是否正常显示，实体类和属性、控制器、方法、参数注解是否正常显示
+* 安装yapi，正常登录，创建项目，导入swagger的json文件，正常显示！
+
+> nodejs + mongodb 开源 api 接口文档管理
+> 官网仓库：https://github.com/YMFE/yapi
+> 官方文档：https://hellosean1025.github.io/yapi
+> 环境要求： nodejs（7.6+)、mongodb（2.6+）、git
+> 这里我们使用 YAPI + idea plugin: EasyYapi 的组合.
+```shell
+# 一、安装nodejs,不同版本差异很大，尽量不用最新
+
+wget https://nodejs.org/dist/v9.8.0/node-v9.8.0-linux-x64.tar.xz
+xz -d node-v9.8.0-linux-x64.tar.xz 
+tar -xvf node-v9.8.0-linux-x64.tar -C /usr/local/
+ln -s /usr/local/node-v9.8.0-linux-x64/bin/node /usr/local/bin/node
+ln -s /usr/local/node-v9.8.0-linux-x64/bin/npm /usr/local/bin/npm
+bash
+node -v
+npm -v
+
+# 二、安装git
+cat << EOF > /etc/yum.repos.d/CentOS-Base.repo
+[base]
+name=CentOS-$releasever - Base - mirrors.aliyun.com
+failovermethod=priority
+baseurl=http://mirrors.aliyun.com/centos/7/os/$basearch/
+EOF
+yum install git -y
+
+# 三、安装mongodb
+cat << EOF > /etc/yum.repos.d/mongodb-3.4.repo
+[mongodb-org-3.4]
+name=MongoDB Repository
+baseurl=https://repo.mongodb.org/yum/redhat/7/mongodb-org/3.4/x86_64/
+gpgcheck=1
+enabled=1
+gpgkey=https://www.mongodb.org/static/pgp/server-3.4.asc
+EOF
+
+yum install -y mongodb-org
+
+sed -i "s/127.0.0.1/0.0.0.0/" /etc/mongod.conf # 开启mongodb远程访问
+systemctl enable mongod
+systemctl start mongod
+
+#卸载mongodb，备用
+systemctl disable mongod # 停止开机自启
+service mongod stop      # 停止服务
+sudo yum erase $(rpm -qa | grep mongodb-org)   # 删除安装包
+sudo rm -r /var/log/mongodb     # 删除日志文件
+sudo rm -r /var/lib/mongo       # 删除数据文件
+
+# 四、安装yapi
+npm install -g yapi-cli --registry https://registry.npm.taobao.org
+/usr/local/node-v9.8.0-linux-x64/bin/yapi server
+# 访问9090网页，输入必要信息，版本选择1.10.2, 安装完毕后，访问3000端口，可先提前修改邮箱提醒
+
+node /root/my-yapi/vendors/server/app.js 
+
+nohup node /root/my-yapi/vendors/server/app.js  &> /root/yapi.log &
+# 升级
+cd  {项目目录}
+yapi ls //查看版本号列表
+yapi update //升级到最新版本
+yapi update -v v1.1.0 //升级到指定版本
+
+
+# nginx 本地转发 3000 到 80/443 绑定域名：
+map $scheme $yapi_proxy_port {
+    "http" "3000";
+    "https" "3443";
+    default "3000";
+}
+server
+    {
+        listen 80;
+        server_name doc.abc.com;
+        index index.html index.htm;
+
+        location / {
+            proxy_pass              $scheme://127.0.0.1:$yapi_proxy_port;
+            proxy_redirect          ~^$scheme://127.0.0.1:$yapi_proxy_port(.*)    $scheme://$server_name$1;
+            proxy_set_header        Host             $http_host;
+            proxy_set_header        X-Real-IP        $host;
+            proxy_set_header        X-Forwarded-For  $proxy_add_x_forwarded_for;
+        }
+    }
+```
+
+
+测试
+* 测试登录、用户启用或禁用，在控制台日志中的变化，有打印数据源名称
